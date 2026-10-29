@@ -8,7 +8,7 @@ namespace TEST
     {
         public override int Throw_cube()
         {
-            return random.Next(1, 7)*3;
+            return random.Next(1, 7) * 3;
         }
     }
 }

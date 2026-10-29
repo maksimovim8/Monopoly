@@ -4,10 +4,22 @@
     {
         static void Main()
         {
-            Player p1 = new Player();
-            Cube y = new Trippe_cube();
+            Player p1 = new Player("Player 1", 500 );
+            Player p2 = new Player("Player 2", 500);
+            Player p3 = new Player("Player 3", 500);
+            Player p4 = new Player("Player 4", 500);
+
+            Player[] players = { p1, p2, p3, p4 };
+
+            Cube cube = new Cube();
+            Cube double_c = new Double_cube();
+            Cube tripple_c = new Trippe_cube();
+            Cube random_c = new Random_cube();
+
+            Cube[] cubes = { cube, double_c, tripple_c, random_c };
 
             Field[] mon_filed = new Field[10];
+
             mon_filed[0] = new Field("A1",10);
             mon_filed[1] = new Field("A2",20);
             mon_filed[2] = new Field("A3",30);
@@ -19,24 +31,69 @@
             mon_filed[8] = new Field("C3",20);
             mon_filed[9] = new Field("Finish", 100);
 
-            p1.money = 100;
-            int player_posotion = 0;
-            
-            for (int i = 0; i < 10; i++)
+            int turns = 10;
+
+
+            for (int i = 0; i < turns; i++)
             {
-                int y_result = y.Throw_cube();
-                Console.WriteLine("Throw: " + y_result);
+                for (int j = 0; j < players.Length; j++)
+                {
+                    Player currentPlayer = players[j];
+                    Cube currentCube = cubes[j];
 
-                p1.Move(y_result);
-                Console.WriteLine("P1 current x:" + p1.GetX());
-                player_posotion = (int) p1.GetX();
+                    Console.WriteLine("\n" + currentPlayer.p_Name);
 
-                int abc = player_posotion % mon_filed.Length;
-                mon_filed[abc].field_touch(p1);
+                    int y_result = currentCube.Throw_cube();
+                    Console.WriteLine("Throw: " + y_result);
 
-                p1.Buy(mon_filed[abc]);
+                    currentPlayer.Move(y_result);
+
+                    Console.WriteLine("Current position: " + currentPlayer.GetX());
+
+                    int player_posotion = (int)currentPlayer.GetX();
+                    int abc = player_posotion % mon_filed.Length;
+                    mon_filed[abc].field_touch(currentPlayer);
+                    currentPlayer.Buy(mon_filed[abc]);
+
+                    Console.WriteLine("Money: " + currentPlayer.money);
+                    Console.WriteLine("Purchased fields: " + currentPlayer.PurchasedFields);
+                }
             }
-            Console.WriteLine(p1.money);
+
+
+            Console.WriteLine("\n__________Results_________");
+            int maxFields = 0;
+
+            //Результати кожного гравця
+            foreach (Player player in players)
+            {
+                Console.WriteLine(player.p_Name);
+                Console.WriteLine("Money: " + player.money);
+                Console.WriteLine("Purchased fields: " + player.PurchasedFields);
+
+                if (player.PurchasedFields > maxFields)
+                {
+                    maxFields = player.PurchasedFields;
+                }
+            }
+            //Переможці
+            Console.WriteLine("\n______Winer______");
+
+            if (maxFields == 0)
+            {
+                Console.WriteLine("Nobody purchased any fields.");
+            }
+            else
+            {
+                foreach (Player player in players)
+                {
+                    if (player.PurchasedFields == maxFields)
+                    {
+                        Console.WriteLine(player.p_Name + " purchased the most fields: " + maxFields);
+                    }
+                }
+            }
+
             Console.ReadLine();
         }
     }
